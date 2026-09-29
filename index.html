@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="da">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ParkFinder - Find Parkering i Danmark</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            color: #333;
+            line-height: 1.6;
+            background: #f9f9f9;
+        }
+
+        /* Header & Navigation */
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        nav a:hover {
+            opacity: 0.8;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 5rem 2rem;
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .cta-button {
+            background: white;
+            color: #667eea;
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s, box-shadow 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Features Section */
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-card p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* How It Works */
+        .how-it-works {
+            background: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .how-it-works h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .step {
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin: 0 auto 1rem;
+        }
+
+        .step h3 {
+            color: #333;
+            margin-bottom: 0.5rem;
+        }
+
+        .step p {
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        /* Pricing Section */
+        .pricing {
+            background: white;
+            padding: 3rem 0;
+            margin-bottom: 3rem;
+        }
+
+        .pricing h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .pricing-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .price-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .price-card:hover {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+        }
+
+        .price-card.featured {
+            border-color: #667eea;
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.2);
+            transform: scale(1.05);
+        }
+
+        .price-card h3 {
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .price {
+            font-size: 2.5rem;
+            color: #667eea;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .price-card ul {
+            list-style: none;
+            margin: 1.5rem 0;
+            text-align: left;
+        }
+
+        .price-card li {
+            padding: 0.5rem 0;
+            color: #666;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .price-card li:last-child {
+            border-bottom: none;
+        }
+
+        /* Footer */
+        footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        footer p {
+            opacity: 0.8;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .price-card.featured {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header>
+        <nav>
+            <div class="logo">🅿️ ParkFinder</div>
+            <ul>
+                <li><a href="#features">Funktioner</a></li>
+                <li><a href="#how-it-works">Sådan virker det</a></li>
+                <li><a href="#pricing">Priser</a></li>
+                <li><a href="#contact">Kontakt</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>Find Parkering. Spar Tid. Spar Penge.</h1>
+        <p>ParkFinder hjælper dig med at finde de bedste parkeringspladser i Danmark med realtidsværdier og gratis parkeringstid.</p>
+        <button class="cta-button">Download App</button>
+    </section>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Features Section -->
+        <section id="features">
+            <div class="features">
+                <div class="feature-card">
+                    <div class="feature-icon">🗺️</div>
+                    <h3>Find Parkering Nemt</h3>
+                    <p>Søg efter ledige parkeringspladser i din nærhed med realtidsopdateringer og præcise kort.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💰</div>
+                    <h3>Se Priserne Øjeblikkeligt</h3>
+                    <p>Sammenlign priser på forskellige parkeringspladser og vælg den mest økonomiske løsning.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⏱️</div>
+                    <h3>Gratis Parkeringstid</h3>
+                    <p>Se hvor længe du kan parkere gratis før du skal betale. Få besked før tiden udløber.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3>App Notifikationer</h3>
+                    <p>Få push-notifikationer når din gratis tid er ved at udløbe.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">⭐</div>
+                    <h3>Bedøm Pladser</h3>
+                    <p>Læs og skriv anmeldelser fra andre parkører for at finde de bedste pladser.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🛡️</div>
+                    <h3>Sikker Betaling</h3>
+                    <p>Betale sikkert direkte gennem appen med flere betalingsmuligheder.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section id="how-it-works" class="how-it-works">
+            <h2>Sådan Virker Det</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Download Appen</h3>
+                    <p>Download ParkFinder fra App Store eller Google Play.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Søg Parkering</h3>
+                    <p>Søg efter parkeringspladser i nærheden af din lokation.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Se Detaljer</h3>
+                    <p>Se priser, gratis parkeringstid og anmeldelser fra andre brugere.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">4</div>
+                    <h3>Parkér og Betalp</h3>
+                    <p>Parkér og betale direkte gennem appen. Modtag påmindelser før tiden udløber.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+        <section id="pricing" class="pricing">
+            <h2>Priser</h2>
+            <div class="pricing-cards">
+                <div class="price-card">
+                    <h3>Gratis</h3>
+                    <div class="price">0 kr</div>
+                    <p>For hver måned</p>
+                    <ul>
+                        <li>✓ Søg parkeringspladser</li>
+                        <li>✓ Se priser</li>
+                        <li>✓ Læs anmeldelser</li>
+                        <li>✗ Påmindelser</li>
+                        <li>✗ Prioriteret support</li>
+                    </ul>
+                    <button class="cta-button">Kom I Gang</button>
+                </div>
+                <div class="price-card featured">
+                    <h3>Premium</h3>
+                    <div class="price">49 kr</div>
+                    <p>For hver måned</p>
+                    <ul>
+                        <li>✓ Søg parkeringspladser</li>
+                        <li>✓ Se priser</li>
+                        <li>✓ Læs anmeldelser</li>
+                        <li>✓ Påmindelser før timeout</li>
+                        <li>✓ Prioriteret support</li>
+                    </ul>
+                    <button class="cta-button">Abonnér Nu</button>
+                </div>
+                <div class="price-card">
+                    <h3>Business</h3>
+                    <div class="price">Kontakt</div>
+                    <p>Tilpasset løsning</p>
+                    <ul>
+                        <li>✓ Alt fra Premium</li>
+                        <li>✓ API adgang</li>
+                        <li>✓ Brugerdefineret integration</li>
+                        <li>✓ Dedikeret support</li>
+                        <li>✓ Custom features</li>
+                    </ul>
+                    <button class="cta-button">Kontakt Os</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <p>&copy; 2025 ParkFinder Danmark. Alle rettigheder forbeholdt.</p>
+        <p>Email: info@parkfinder.dk | Telefon: +45 40 00 00 00</p>
+        <p><a href="#" style="color: #667eea; text-decoration: none;">Privatlivspolitik</a> | <a href="#" style="color: #667eea; text-decoration: none;">Vilkår</a></p>
+    </footer>
+</body>
+</html>
